@@ -29,11 +29,11 @@ public class UserProfileServiceController {
     @GetMapping("/{id}")
     public ResponseEntity<DomainUser> getUserProfile(@PathVariable String id){
         Optional<DomainUser> userProfile = findUserProfileUseCase.findProfileById(id);
-        return ResponseEntity.ok(userProfile.orElse(new DomainUser()));
+        return ResponseEntity.ok(new DomainUser(null, null, null));
     }
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<DomainUser> createUser(@Validated CreateUserCommand createUserCommand){
+    public ResponseEntity<DomainUser> createUser(@Validated @RequestBody CreateUserCommand createUserCommand){
         DomainUser createdUser = registerUserProfileUseCase.registerUser(createUserCommand);
         return ResponseEntity.ok(createdUser);
     }

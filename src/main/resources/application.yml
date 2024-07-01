@@ -3,3 +3,10 @@ spring:
     name: user-service
   config:
     import: "optional:configserver:"
+  data:
+    mongodb:
+      host: "localhost"
+      port: "27017"
+      username: test
+      password: test
+      database: profiles
