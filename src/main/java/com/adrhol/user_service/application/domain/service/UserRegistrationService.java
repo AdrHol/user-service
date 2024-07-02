@@ -1,20 +1,22 @@
 package com.adrhol.user_service.application.domain.service;
 
-import com.adrhol.user_service.adapters.out.persistance.UserProfileCreationAdapter;
+import com.adrhol.user_service.adapters.out.persistence.UserMapper;
 import com.adrhol.user_service.application.domain.entity.DomainUser;
-import com.adrhol.user_service.application.domain.entity.UserProfileMongoEntity;
 import com.adrhol.user_service.application.ports.in.CreateUserCommand;
 import com.adrhol.user_service.application.ports.in.DeactivateUserProfileUseCase;
 import com.adrhol.user_service.application.ports.in.RegisterUserProfileUseCase;
 import com.adrhol.user_service.application.ports.in.UpdateUserProfileUseCase;
+import com.adrhol.user_service.application.ports.out.UserRegistrationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserRegistrationService implements RegisterUserProfileUseCase, DeactivateUserProfileUseCase, UpdateUserProfileUseCase {
 
-    private final UserProfileCreationAdapter userProfileCreationAdapter;
+    private final UserRegistrationPort userRegistrationPort;
 
     @Override
     public boolean deactivateProfile(String userId) {
@@ -23,8 +25,7 @@ public class UserRegistrationService implements RegisterUserProfileUseCase, Deac
 
     @Override
     public DomainUser registerUser(CreateUserCommand createUserCommand) {
-        UserProfileMongoEntity user = userProfileCreationAdapter.registerUser(createUserCommand);
-        return new DomainUser(user.getId(), user.getFirstName(), user.getLastName());
+        return userRegistrationPort.registerUser(createUserCommand);
     }
 
     @Override

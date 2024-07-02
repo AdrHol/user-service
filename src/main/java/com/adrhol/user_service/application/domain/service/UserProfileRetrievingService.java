@@ -2,8 +2,10 @@ package com.adrhol.user_service.application.domain.service;
 
 import com.adrhol.user_service.application.domain.entity.DomainUser;
 import com.adrhol.user_service.application.ports.in.*;
+import com.adrhol.user_service.application.ports.out.UserProfileQueryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,10 +14,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserProfileRetrievingService implements RetrieveActiveProfilesUseCase, FindUserProfileUseCase, SearchUserProfileQuery {
 
+    private final UserProfileQueryPort userProfileQueryPort;
 
     @Override
-    public Optional<DomainUser> findProfileById(String id) {
-        return Optional.empty();
+    public DomainUser findProfileById(String id) {
+        return userProfileQueryPort.getUserById(id);
     }
 
     @Override
@@ -25,7 +28,7 @@ public class UserProfileRetrievingService implements RetrieveActiveProfilesUseCa
 
     @Override
     public List<DomainUser> getActiveUsers() {
-        return null;
+        return userProfileQueryPort.getAllActiveUsers();
     }
 
 }

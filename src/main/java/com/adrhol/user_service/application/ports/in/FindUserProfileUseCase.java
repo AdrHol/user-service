@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface FindUserProfileUseCase {
 
-    Optional<DomainUser> findProfileById(String id);
+    DomainUser findProfileById(String id);
     List<DomainUser> findUsersByCriteria(SearchUserProfileQuery searchUserProfileQuery);
 }

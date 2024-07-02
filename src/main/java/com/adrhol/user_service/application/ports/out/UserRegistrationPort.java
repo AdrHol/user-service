@@ -1,10 +1,9 @@
-package com.adrhol.user_service.adapters.out.persistance;
+package com.adrhol.user_service.application.ports.out;
 
 import com.adrhol.user_service.application.domain.entity.DomainUser;
 import com.adrhol.user_service.application.domain.entity.UserProfileMongoEntity;
 import com.adrhol.user_service.application.ports.in.CreateUserCommand;
 
-public interface UserProfileCreationAdapter {
-
-    UserProfileMongoEntity registerUser(CreateUserCommand user);
+public interface UserRegistrationPort {
+    DomainUser registerUser(CreateUserCommand user);
 }

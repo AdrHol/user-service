@@ -28,8 +28,7 @@ public class UserProfileServiceController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<DomainUser> getUserProfile(@PathVariable String id){
-        Optional<DomainUser> userProfile = findUserProfileUseCase.findProfileById(id);
-        return ResponseEntity.ok(new DomainUser(null, null, null));
+        return ResponseEntity.ok(findUserProfileUseCase.findProfileById(id));
     }
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)

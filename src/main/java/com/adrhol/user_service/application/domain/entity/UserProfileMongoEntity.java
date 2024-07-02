@@ -1,14 +1,10 @@
 package com.adrhol.user_service.application.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "user_profiles")
-@RequiredArgsConstructor
 public class UserProfileMongoEntity {
 
     @Id

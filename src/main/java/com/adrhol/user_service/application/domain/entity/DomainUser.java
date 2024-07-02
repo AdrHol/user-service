@@ -11,4 +11,5 @@ public class DomainUser {
     private String id;
     private String firstName;
     private String lastName;
+
 }
