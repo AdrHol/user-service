@@ -2,14 +2,16 @@ package com.adrhol.user_service.adapters.out.persistence;
 
 import com.adrhol.user_service.application.domain.entity.DomainUser;
 import com.adrhol.user_service.application.domain.entity.UserProfileMongoEntity;
-import com.adrhol.user_service.application.domain.exceptions.UserProfileNotExistsException;
+import com.adrhol.user_service.application.domain.exceptions.UserProfileNotFoundException;
 import com.adrhol.user_service.application.ports.in.CreateUserCommand;
+import com.adrhol.user_service.application.ports.in.UpdateUserCommand;
 import com.adrhol.user_service.application.ports.out.UserProfileQueryPort;
 import com.adrhol.user_service.application.ports.out.UserRegistrationPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserProfileAdapter implements UserRegistrationPort, UserProfileQueryPort {
@@ -30,9 +32,24 @@ public class UserProfileAdapter implements UserRegistrationPort, UserProfileQuer
     }
 
     @Override
+    public DomainUser updateUser(UpdateUserCommand updateUserCommand) {
+        UserProfileMongoEntity user = userProfileRepository.findById(updateUserCommand.profileId())
+                                                           .orElseThrow(UserProfileNotFoundException::new);
+        user.setFirstName(updateUserCommand.firstName());
+        user.setLastName(updateUserCommand.lastName());
+
+        return userMapper.userProfileToDomainEntity(userProfileRepository.save(user));
+    }
+
+    @Override
     public DomainUser getUserById(String id) {
-        UserProfileMongoEntity user = userProfileRepository.findById(id).orElseThrow(UserProfileNotExistsException::new);
+        UserProfileMongoEntity user = userProfileRepository.findById(id).orElseThrow(UserProfileNotFoundException::new);
         return userMapper.userProfileToDomainEntity(user);
+    }
+
+    @Override
+    public Optional<UserProfileMongoEntity> getUserByAccountId(String accountId) {
+        return userProfileRepository.findProfileByUserAccountId(accountId);
     }
 
     @Override

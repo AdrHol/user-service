@@ -41,8 +41,8 @@ public class UserProfileServiceController {
         return ResponseEntity.ok(findUserProfileUseCase.findUsersByCriteria(searchUserProfileQuery));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<DomainUser> updateUser(@PathVariable String id, @Validated CreateUserCommand createUserCommand){
-        return ResponseEntity.ok(updateUserProfileUseCase.updateProfile(createUserCommand));
+    public ResponseEntity<DomainUser> updateUser(@Validated UpdateUserCommand updateUserCommand){
+        return ResponseEntity.ok(updateUserProfileUseCase.updateProfile(updateUserCommand));
     }
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

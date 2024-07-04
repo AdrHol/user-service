@@ -1,7 +1,7 @@
 package com.adrhol.user_service.application.domain.exceptions;
 
-public class UserProfileNotExistsException extends RuntimeException{
-    public UserProfileNotExistsException() {
+public class UserProfileNotFoundException extends RuntimeException{
+    public UserProfileNotFoundException() {
         super("User profile not found.");
     }
 }

@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface UpdateUserProfileUseCase {
 
-    DomainUser updateProfile(CreateUserCommand createUserCommand);
+    DomainUser updateProfile(UpdateUserCommand updateUserCommand);
 }

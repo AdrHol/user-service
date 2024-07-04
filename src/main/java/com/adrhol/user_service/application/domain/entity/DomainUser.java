@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DomainUser {
     private String id;
+    private String accountId;
     private String firstName;
     private String lastName;
-
 }
