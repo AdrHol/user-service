@@ -1,6 +1,6 @@
 package com.adrhol.user_service.adapters.in.web;
 
-import com.adrhol.user_service.application.domain.entity.DomainUser;
+import com.adrhol.user_service.application.domain.entity.UserProfile;
 import com.adrhol.user_service.application.ports.in.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1")
@@ -23,25 +22,25 @@ public class UserProfileServiceController {
     private final UpdateUserProfileUseCase updateUserProfileUseCase;
 
     @GetMapping("/all")
-    public ResponseEntity<List<DomainUser>> getAllActiveUsers(){
+    public ResponseEntity<List<UserProfile>> getAllActiveUsers(){
         return ResponseEntity.ok(retrieveActiveProfilesUseCase.getActiveUsers());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<DomainUser> getUserProfile(@PathVariable String id){
+    public ResponseEntity<UserProfile> getUserProfile(@PathVariable String id){
         return ResponseEntity.ok(findUserProfileUseCase.findProfileById(id));
     }
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<DomainUser> createUser(@Validated @RequestBody CreateUserCommand createUserCommand){
-        DomainUser createdUser = registerUserProfileUseCase.registerUser(createUserCommand);
+    public ResponseEntity<UserProfile> createUser(@Validated @RequestBody CreateUserCommand createUserCommand){
+        UserProfile createdUser = registerUserProfileUseCase.registerUser(createUserCommand);
         return ResponseEntity.ok(createdUser);
     }
     @PostMapping("/search")
-    public ResponseEntity<List<DomainUser>> findProfileByCriteria(SearchUserProfileQuery searchUserProfileQuery){
+    public ResponseEntity<List<UserProfile>> findProfileByCriteria(SearchUserProfileQuery searchUserProfileQuery){
         return ResponseEntity.ok(findUserProfileUseCase.findUsersByCriteria(searchUserProfileQuery));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<DomainUser> updateUser(@Validated UpdateUserCommand updateUserCommand){
+    public ResponseEntity<UserProfile> updateUser(@Validated UpdateUserCommand updateUserCommand){
         return ResponseEntity.ok(updateUserProfileUseCase.updateProfile(updateUserCommand));
     }
     @DeleteMapping("/{id}")

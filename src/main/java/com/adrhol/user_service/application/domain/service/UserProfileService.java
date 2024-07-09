@@ -1,7 +1,6 @@
 package com.adrhol.user_service.application.domain.service;
 
-import com.adrhol.user_service.application.domain.entity.DomainUser;
-import com.adrhol.user_service.application.domain.entity.UserProfileMongoEntity;
+import com.adrhol.user_service.application.domain.entity.UserProfile;
 import com.adrhol.user_service.application.domain.exceptions.ProfileAlreadyInUseException;
 import com.adrhol.user_service.application.ports.in.*;
 import com.adrhol.user_service.application.ports.out.UserProfileQueryPort;
@@ -27,28 +26,28 @@ public class UserProfileService implements RegisterUserProfileUseCase, Deactivat
     }
 
     @Override
-    public DomainUser registerUser(CreateUserCommand createUserCommand) {
+    public UserProfile registerUser(CreateUserCommand createUserCommand) {
         checkIfAccountHasAssignedProfile(createUserCommand);
         return userRegistrationPort.registerUser(createUserCommand);
     }
 
     @Override
-    public DomainUser updateProfile(UpdateUserCommand updateUserCommand) {
-        DomainUser userProfile = findProfileById(updateUserCommand.profileId());
+    public UserProfile updateProfile(UpdateUserCommand updateUserCommand) {
+        UserProfile userProfile = findProfileById(updateUserCommand.profileId());
         return null;
     }
     @Override
-    public DomainUser findProfileById(String id) {
+    public UserProfile findProfileById(String id) {
         return userProfileQueryPort.getUserById(id);
     }
 
     @Override
-    public List<DomainUser> findUsersByCriteria(SearchUserProfileQuery searchUserProfileQuery) {
+    public List<UserProfile> findUsersByCriteria(SearchUserProfileQuery searchUserProfileQuery) {
         return null;
     }
 
     @Override
-    public List<DomainUser> getActiveUsers() {
+    public List<UserProfile> getActiveUsers() {
         return userProfileQueryPort.getAllActiveUsers();
     }
     private void checkIfAccountHasAssignedProfile(CreateUserCommand command) throws ProfileAlreadyInUseException{

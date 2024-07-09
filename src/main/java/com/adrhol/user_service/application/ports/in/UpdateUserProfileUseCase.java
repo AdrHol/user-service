@@ -1,10 +1,8 @@
 package com.adrhol.user_service.application.ports.in;
 
-import com.adrhol.user_service.application.domain.entity.DomainUser;
-
-import java.util.Optional;
+import com.adrhol.user_service.application.domain.entity.UserProfile;
 
 public interface UpdateUserProfileUseCase {
 
-    DomainUser updateProfile(UpdateUserCommand updateUserCommand);
+    UserProfile updateProfile(UpdateUserCommand updateUserCommand);
 }

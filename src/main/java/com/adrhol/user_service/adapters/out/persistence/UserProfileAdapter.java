@@ -1,6 +1,7 @@
 package com.adrhol.user_service.adapters.out.persistence;
 
-import com.adrhol.user_service.application.domain.entity.DomainUser;
+import com.adrhol.user_service.adapters.out.persistence.mapper.UserMapper;
+import com.adrhol.user_service.application.domain.entity.UserProfile;
 import com.adrhol.user_service.application.domain.entity.UserProfileMongoEntity;
 import com.adrhol.user_service.application.domain.exceptions.UserProfileNotFoundException;
 import com.adrhol.user_service.application.ports.in.CreateUserCommand;
@@ -26,13 +27,13 @@ public class UserProfileAdapter implements UserRegistrationPort, UserProfileQuer
     }
 
     @Override
-    public DomainUser registerUser(CreateUserCommand command) {
+    public UserProfile registerUser(CreateUserCommand command) {
         UserProfileMongoEntity userRequest = userMapper.creationCommandToEntity(command);
         return userMapper.userProfileToDomainEntity(userProfileRepository.save(userRequest));
     }
 
     @Override
-    public DomainUser updateUser(UpdateUserCommand updateUserCommand) {
+    public UserProfile updateUser(UpdateUserCommand updateUserCommand) {
         UserProfileMongoEntity user = userProfileRepository.findById(updateUserCommand.profileId())
                                                            .orElseThrow(UserProfileNotFoundException::new);
         user.setFirstName(updateUserCommand.firstName());
@@ -42,7 +43,7 @@ public class UserProfileAdapter implements UserRegistrationPort, UserProfileQuer
     }
 
     @Override
-    public DomainUser getUserById(String id) {
+    public UserProfile getUserById(String id) {
         UserProfileMongoEntity user = userProfileRepository.findById(id).orElseThrow(UserProfileNotFoundException::new);
         return userMapper.userProfileToDomainEntity(user);
     }
@@ -53,7 +54,7 @@ public class UserProfileAdapter implements UserRegistrationPort, UserProfileQuer
     }
 
     @Override
-    public List<DomainUser> getAllActiveUsers() {
+    public List<UserProfile> getAllActiveUsers() {
         return userMapper.userProfileToDomainEntity(userProfileRepository.findAll());
     }
 }

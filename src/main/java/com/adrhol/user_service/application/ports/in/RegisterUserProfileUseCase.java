@@ -1,7 +1,7 @@
 package com.adrhol.user_service.application.ports.in;
 
-import com.adrhol.user_service.application.domain.entity.DomainUser;
+import com.adrhol.user_service.application.domain.entity.UserProfile;
 
 public interface RegisterUserProfileUseCase {
-    DomainUser registerUser(CreateUserCommand createUserCommand);
+    UserProfile registerUser(CreateUserCommand createUserCommand);
 }
