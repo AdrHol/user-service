@@ -1,5 +1,6 @@
 package com.adrhol.user_service.common.validation;
 
+import com.adrhol.user_service.application.domain.entity.ProfileType;
 import com.adrhol.user_service.application.domain.entity.UserProfile;
 import com.adrhol.user_service.application.domain.exceptions.ProfileAlreadyInUseException;
 import com.adrhol.user_service.application.ports.in.CreateUserCommand;
@@ -23,6 +24,13 @@ public class UserProfileUserProfileValidatorImpl implements UserProfileValidator
             throw new ProfileAlreadyInUseException();
         }
         return true;
+    }
+
+    @Override
+    public boolean canBePromoted(UserProfile userProfile, ProfileType promotedTo) {
+        if(userProfile.getProfileType() == promotedTo){
+            return false;
+        } else return true;
     }
 
 }

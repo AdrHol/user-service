@@ -25,7 +25,7 @@ public class UserProfileServiceController {
     public ResponseEntity<List<UserProfile>> getAllActiveUsers(){
         return ResponseEntity.ok(retrieveActiveProfilesUseCase.getActiveUsers());
     }
-    @GetMapping("/{id}")
+    @GetMapping("/profile/{id}")
     public ResponseEntity<UserProfile> getUserProfile(@PathVariable String id){
         return ResponseEntity.ok(findUserProfileUseCase.findProfileById(id));
     }
@@ -39,11 +39,11 @@ public class UserProfileServiceController {
     public ResponseEntity<List<UserProfile>> findProfileByCriteria(SearchUserProfileQuery searchUserProfileQuery){
         return ResponseEntity.ok(findUserProfileUseCase.findUsersByCriteria(searchUserProfileQuery));
     }
-    @PutMapping("/{id}")
+    @PutMapping("/profile/{id}")
     public ResponseEntity<UserProfile> updateUser(@Validated UpdateUserCommand updateUserCommand){
         return ResponseEntity.ok(profileDetailsEditionUseCase.updateProfile(updateUserCommand));
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/profile/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteUser(@PathVariable String id){
         deactivateUserUseCase.deactivateProfile(id);
@@ -51,7 +51,7 @@ public class UserProfileServiceController {
     }
     @PostMapping("/promote")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserProfile> promoteUserProfile(ProfilePromotionCommand profilePromotionCommand){
+    public ResponseEntity<UserProfile> promoteUserProfile(@RequestBody ProfilePromotionCommand profilePromotionCommand){
         return ResponseEntity.ok(profileDetailsEditionUseCase.promoteProfile(profilePromotionCommand));
     }
 

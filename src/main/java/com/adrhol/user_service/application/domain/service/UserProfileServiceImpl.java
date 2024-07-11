@@ -1,7 +1,9 @@
 package com.adrhol.user_service.application.domain.service;
 
 import com.adrhol.user_service.adapters.out.persistence.mapper.UserMapper;
+import com.adrhol.user_service.application.domain.entity.ProfileType;
 import com.adrhol.user_service.application.domain.entity.UserProfile;
+import com.adrhol.user_service.application.domain.exceptions.UserProfilePromotionException;
 import com.adrhol.user_service.application.ports.in.*;
 import com.adrhol.user_service.application.ports.out.UserProfileQueryPort;
 import com.adrhol.user_service.application.ports.out.UserRegistrationPort;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,7 +27,9 @@ public class UserProfileServiceImpl implements RegisterUserProfileUseCase, Deact
     private final UserProfileValidator userProfileValidator;
     @Override
     public boolean deactivateProfile(String userId) {
-        return false;
+        UserProfile profileToDeletion = userProfileQueryPort.getProfileById(userId);
+        userRegistrationPort.removeProfile(profileToDeletion);
+        return true;
     }
 
     @Override
@@ -37,20 +42,24 @@ public class UserProfileServiceImpl implements RegisterUserProfileUseCase, Deact
 
     @Override
     public UserProfile updateProfile(UpdateUserCommand updateUserCommand) {
-        UserProfile userProfile = userProfileQueryPort.getUserById(updateUserCommand.profileId());
+        UserProfile userProfile = userProfileQueryPort.getProfileById(updateUserCommand.profileId());
         return null;
     }
 
     @Override
     public UserProfile promoteProfile(final ProfilePromotionCommand profilePromotionCommand) {
-        UserProfile userProfile = userProfileQueryPort.getUserById(profilePromotionCommand.profileId());
+        UserProfile userProfile = userProfileQueryPort.getProfileById(profilePromotionCommand.profileId());
 
-        return null;
+        if(userProfileValidator.canBePromoted(userProfile, profilePromotionCommand.promotionType())){
+            return persistPromotedProfile(userProfile, profilePromotionCommand);
+        } else {
+            throw new UserProfilePromotionException();
+        }
     }
 
     @Override
     public UserProfile findProfileById(String id) {
-        return userProfileQueryPort.getUserById(id);
+        return userProfileQueryPort.getProfileById(id);
     }
 
     @Override
@@ -61,6 +70,17 @@ public class UserProfileServiceImpl implements RegisterUserProfileUseCase, Deact
     @Override
     public List<UserProfile> getActiveUsers() {
         return userProfileQueryPort.getAllActiveUsers();
+    }
+
+    // TODO less hardcoded solution - test purpose only
+    private UserProfile persistPromotedProfile(UserProfile userProfile, ProfilePromotionCommand profilePromotionCommand){
+        if(profilePromotionCommand.promotionType() == ProfileType.SELLER){
+            return userRegistrationPort.registerUser(userMapper.mapToSeller(userProfile,
+                    LocalDateTime.now(),
+                    profilePromotionCommand.shop().shopInfo(),
+                    profilePromotionCommand.shop().address()));
+        }
+        return new UserProfile(null, null, null);
     }
 
 }

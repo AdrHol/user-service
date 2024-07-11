@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 public interface UserProfileRepository extends MongoRepository<UserProfile, String> {
-    Optional<UserProfile> findProfileByUserAccountId(String id);
+    Optional<UserProfile> findProfileByAccountId(String id);
     <U extends UserProfile> U save(U entity);
 }

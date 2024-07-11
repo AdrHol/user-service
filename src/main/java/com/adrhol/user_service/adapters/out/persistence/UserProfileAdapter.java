@@ -1,12 +1,7 @@
 package com.adrhol.user_service.adapters.out.persistence;
 
-import com.adrhol.user_service.adapters.out.persistence.mapper.UserMapper;
-import com.adrhol.user_service.application.domain.entity.ProfileOwner;
 import com.adrhol.user_service.application.domain.entity.UserProfile;
-import com.adrhol.user_service.application.domain.entity.UserProfileMongoEntity;
 import com.adrhol.user_service.application.domain.exceptions.UserProfileNotFoundException;
-import com.adrhol.user_service.application.ports.in.CreateUserCommand;
-import com.adrhol.user_service.application.ports.in.UpdateUserCommand;
 import com.adrhol.user_service.application.ports.out.UserProfileQueryPort;
 import com.adrhol.user_service.application.ports.out.UserRegistrationPort;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +31,18 @@ public class UserProfileAdapter implements UserRegistrationPort, UserProfileQuer
     }
 
     @Override
-    public UserProfile getUserById(String id) {
+    public void removeProfile(UserProfile userProfile) {
+        userProfileRepository.delete(userProfile);
+    }
+
+    @Override
+    public UserProfile getProfileById(String id) {
         return userProfileRepository.findById(id).orElseThrow(UserProfileNotFoundException::new);
     }
 
     @Override
     public Optional<UserProfile> getUserByAccountId(String accountId) {
-        return userProfileRepository.findProfileByUserAccountId(accountId);
+        return userProfileRepository.findProfileByAccountId(accountId);
     }
 
     @Override
