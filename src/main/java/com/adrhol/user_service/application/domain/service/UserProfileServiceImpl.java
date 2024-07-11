@@ -1,10 +1,11 @@
 package com.adrhol.user_service.application.domain.service;
 
+import com.adrhol.user_service.adapters.out.persistence.mapper.UserMapper;
 import com.adrhol.user_service.application.domain.entity.UserProfile;
-import com.adrhol.user_service.application.domain.exceptions.ProfileAlreadyInUseException;
 import com.adrhol.user_service.application.ports.in.*;
 import com.adrhol.user_service.application.ports.out.UserProfileQueryPort;
 import com.adrhol.user_service.application.ports.out.UserRegistrationPort;
+import com.adrhol.user_service.common.validation.UserProfileValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,8 @@ public class UserProfileServiceImpl implements RegisterUserProfileUseCase, Deact
 
     private final UserRegistrationPort userRegistrationPort;
     private final UserProfileQueryPort userProfileQueryPort;
-
+    private final UserMapper userMapper;
+    private final UserProfileValidator userProfileValidator;
     @Override
     public boolean deactivateProfile(String userId) {
         return false;
@@ -27,8 +29,10 @@ public class UserProfileServiceImpl implements RegisterUserProfileUseCase, Deact
 
     @Override
     public UserProfile registerUser(CreateUserCommand createUserCommand) {
-        checkIfAccountHasAssignedProfile(createUserCommand);
-        return userRegistrationPort.registerUser(createUserCommand);
+        userProfileValidator.throwIfAccountHasAssignedProfile(createUserCommand.accountId());
+
+        UserProfile newUser = userMapper.creationCommandToEntity(createUserCommand);
+        return userRegistrationPort.registerUser(newUser);
     }
 
     @Override
@@ -58,9 +62,5 @@ public class UserProfileServiceImpl implements RegisterUserProfileUseCase, Deact
     public List<UserProfile> getActiveUsers() {
         return userProfileQueryPort.getAllActiveUsers();
     }
-    private void checkIfAccountHasAssignedProfile(CreateUserCommand command) throws ProfileAlreadyInUseException{
-        if(userProfileQueryPort.getUserByAccountId(command.accountId()).isPresent()){
-            throw new ProfileAlreadyInUseException();
-        }
-    }
+
 }

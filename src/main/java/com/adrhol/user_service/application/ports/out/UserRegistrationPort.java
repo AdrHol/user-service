@@ -5,6 +5,6 @@ import com.adrhol.user_service.application.ports.in.CreateUserCommand;
 import com.adrhol.user_service.application.ports.in.UpdateUserCommand;
 
 public interface UserRegistrationPort {
-    UserProfile registerUser(CreateUserCommand user);
-    UserProfile updateUser(UpdateUserCommand updateUserCommand);
+    UserProfile registerUser(UserProfile user);
+    UserProfile updateUser(UserProfile updateUserCommand);
 }

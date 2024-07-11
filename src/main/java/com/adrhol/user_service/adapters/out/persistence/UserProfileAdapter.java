@@ -19,28 +19,20 @@ import java.util.Optional;
 public class UserProfileAdapter implements UserRegistrationPort, UserProfileQueryPort {
 
     private final UserProfileRepository userProfileRepository;
-    private final UserMapper userMapper;
 
     @Autowired
-    public UserProfileAdapter(UserProfileRepository userProfileRepository, UserMapper userMapper) {
+    public UserProfileAdapter(UserProfileRepository userProfileRepository) {
         this.userProfileRepository = userProfileRepository;
-        this.userMapper = userMapper;
     }
 
     @Override
-    public UserProfile registerUser(CreateUserCommand command) {
-        UserProfile userRequest = userMapper.creationCommandToEntity(command);
-        return userProfileRepository.save(userRequest);
+    public UserProfile registerUser(UserProfile entity) {
+        return userProfileRepository.save(entity);
     }
 
     @Override
-    public UserProfile updateUser(UpdateUserCommand updateUserCommand) {
-        UserProfile user = userProfileRepository.findById(updateUserCommand.profileId())
-                                                           .orElseThrow(UserProfileNotFoundException::new);
-
-        user.setProfileOwner(new ProfileOwner(updateUserCommand.firstName(), updateUserCommand.lastName()));
-
-        return userProfileRepository.save(user);
+    public UserProfile updateUser(UserProfile updatedUser) {
+        return userProfileRepository.save(updatedUser);
     }
 
     @Override
