@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface UserProfileQueryPort {
 
     UserProfile getUserById(String id);
-    Optional<UserProfileMongoEntity> getUserByAccountId(String accountId);
+    Optional<UserProfile> getUserByAccountId(String accountId);
     List<UserProfile> getAllActiveUsers();
 }

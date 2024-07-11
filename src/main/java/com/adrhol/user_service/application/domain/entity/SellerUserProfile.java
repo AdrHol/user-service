@@ -42,4 +42,9 @@ public class SellerUserProfile extends UserProfile{
         this.shopInfo = shopInfo;
         this.address = address;
     }
+
+    public boolean hasValidPolicy(){
+        return LocalDateTime.now()
+                            .isBefore(this.policyTimeToLive);
+    }
 }

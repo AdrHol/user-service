@@ -19,7 +19,7 @@ public class UserProfileServiceController {
     private final DeactivateUserProfileUseCase deactivateUserUseCase;
     private final RetrieveActiveProfilesUseCase retrieveActiveProfilesUseCase;
     private final FindUserProfileUseCase findUserProfileUseCase;
-    private final UpdateUserProfileUseCase updateUserProfileUseCase;
+    private final ProfileDetailsEditionUseCase profileDetailsEditionUseCase;
 
     @GetMapping("/all")
     public ResponseEntity<List<UserProfile>> getAllActiveUsers(){
@@ -41,13 +41,18 @@ public class UserProfileServiceController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<UserProfile> updateUser(@Validated UpdateUserCommand updateUserCommand){
-        return ResponseEntity.ok(updateUserProfileUseCase.updateProfile(updateUserCommand));
+        return ResponseEntity.ok(profileDetailsEditionUseCase.updateProfile(updateUserCommand));
     }
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteUser(@PathVariable String id){
         deactivateUserUseCase.deactivateProfile(id);
         return ResponseEntity.ok("User deactivated");
+    }
+    @PostMapping("/promote")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<UserProfile> promoteUserProfile(ProfilePromotionCommand profilePromotionCommand){
+        return ResponseEntity.ok(profileDetailsEditionUseCase.promoteProfile(profilePromotionCommand));
     }
 
 }

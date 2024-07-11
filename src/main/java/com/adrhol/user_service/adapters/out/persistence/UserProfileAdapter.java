@@ -1,6 +1,7 @@
 package com.adrhol.user_service.adapters.out.persistence;
 
 import com.adrhol.user_service.adapters.out.persistence.mapper.UserMapper;
+import com.adrhol.user_service.application.domain.entity.ProfileOwner;
 import com.adrhol.user_service.application.domain.entity.UserProfile;
 import com.adrhol.user_service.application.domain.entity.UserProfileMongoEntity;
 import com.adrhol.user_service.application.domain.exceptions.UserProfileNotFoundException;
@@ -17,44 +18,43 @@ import java.util.Optional;
 @Component
 public class UserProfileAdapter implements UserRegistrationPort, UserProfileQueryPort {
 
-    private final UserProfileMongoRepository userProfileRepository;
+    private final UserProfileRepository userProfileRepository;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserProfileAdapter(UserProfileMongoRepository userProfileRepository, UserMapper userMapper) {
+    public UserProfileAdapter(UserProfileRepository userProfileRepository, UserMapper userMapper) {
         this.userProfileRepository = userProfileRepository;
         this.userMapper = userMapper;
     }
 
     @Override
     public UserProfile registerUser(CreateUserCommand command) {
-        UserProfileMongoEntity userRequest = userMapper.creationCommandToEntity(command);
-        return userMapper.userProfileToDomainEntity(userProfileRepository.save(userRequest));
+        UserProfile userRequest = userMapper.creationCommandToEntity(command);
+        return userProfileRepository.save(userRequest);
     }
 
     @Override
     public UserProfile updateUser(UpdateUserCommand updateUserCommand) {
-        UserProfileMongoEntity user = userProfileRepository.findById(updateUserCommand.profileId())
+        UserProfile user = userProfileRepository.findById(updateUserCommand.profileId())
                                                            .orElseThrow(UserProfileNotFoundException::new);
-        user.setFirstName(updateUserCommand.firstName());
-        user.setLastName(updateUserCommand.lastName());
 
-        return userMapper.userProfileToDomainEntity(userProfileRepository.save(user));
+        user.setProfileOwner(new ProfileOwner(updateUserCommand.firstName(), updateUserCommand.lastName()));
+
+        return userProfileRepository.save(user);
     }
 
     @Override
     public UserProfile getUserById(String id) {
-        UserProfileMongoEntity user = userProfileRepository.findById(id).orElseThrow(UserProfileNotFoundException::new);
-        return userMapper.userProfileToDomainEntity(user);
+        return userProfileRepository.findById(id).orElseThrow(UserProfileNotFoundException::new);
     }
 
     @Override
-    public Optional<UserProfileMongoEntity> getUserByAccountId(String accountId) {
+    public Optional<UserProfile> getUserByAccountId(String accountId) {
         return userProfileRepository.findProfileByUserAccountId(accountId);
     }
 
     @Override
     public List<UserProfile> getAllActiveUsers() {
-        return userMapper.userProfileToDomainEntity(userProfileRepository.findAll());
+        return userProfileRepository.findAll();
     }
 }

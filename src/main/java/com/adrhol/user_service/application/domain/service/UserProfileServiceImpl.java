@@ -14,8 +14,8 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserProfileService implements RegisterUserProfileUseCase, DeactivateUserProfileUseCase, UpdateUserProfileUseCase,
-        RetrieveActiveProfilesUseCase, FindUserProfileUseCase, SearchUserProfileQuery{
+public class UserProfileServiceImpl implements RegisterUserProfileUseCase, DeactivateUserProfileUseCase, ProfileDetailsEditionUseCase,
+                                               RetrieveActiveProfilesUseCase, FindUserProfileUseCase, SearchUserProfileQuery{
 
     private final UserRegistrationPort userRegistrationPort;
     private final UserProfileQueryPort userProfileQueryPort;
@@ -33,9 +33,17 @@ public class UserProfileService implements RegisterUserProfileUseCase, Deactivat
 
     @Override
     public UserProfile updateProfile(UpdateUserCommand updateUserCommand) {
-        UserProfile userProfile = findProfileById(updateUserCommand.profileId());
+        UserProfile userProfile = userProfileQueryPort.getUserById(updateUserCommand.profileId());
         return null;
     }
+
+    @Override
+    public UserProfile promoteProfile(final ProfilePromotionCommand profilePromotionCommand) {
+        UserProfile userProfile = userProfileQueryPort.getUserById(profilePromotionCommand.profileId());
+
+        return null;
+    }
+
     @Override
     public UserProfile findProfileById(String id) {
         return userProfileQueryPort.getUserById(id);
