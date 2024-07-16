@@ -8,5 +8,4 @@ public interface UserRegistrationPort {
     UserProfile registerUser(UserProfile user);
     UserProfile updateUser(UserProfile updateUserCommand);
     void removeProfile(UserProfile userProfile);
-    UserProfile removePremiumStatus(String profileId);
 }
