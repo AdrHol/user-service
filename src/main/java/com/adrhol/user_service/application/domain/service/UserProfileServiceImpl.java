@@ -26,10 +26,17 @@ public class UserProfileServiceImpl implements RegisterUserProfileUseCase, Deact
     private final UserMapper userMapper;
     private final UserProfileValidator userProfileValidator;
     @Override
-    public boolean deactivateProfile(String userId) {
+    public boolean removeProfile(String userId) {
         UserProfile profileToDeletion = userProfileQueryPort.getProfileById(userId);
         userRegistrationPort.removeProfile(profileToDeletion);
         return true;
+    }
+
+    @Override
+    public UserProfile removePremium(final String profileId) {
+        UserProfile retrievedProfile = userProfileQueryPort.getProfileById(profileId);
+        retrievedProfile.setProfileType(ProfileType.BASIC);
+        return userRegistrationPort.updateUser(retrievedProfile);
     }
 
     @Override

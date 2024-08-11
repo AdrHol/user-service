@@ -43,10 +43,14 @@ public class UserProfileServiceController {
     public ResponseEntity<UserProfile> updateUser(UpdateUserCommand updateUserCommand){
         return ResponseEntity.ok(profileDetailsEditionUseCase.updateProfile(updateUserCommand));
     }
+    @DeleteMapping("/profile/{id}/permission")
+    public ResponseEntity<UserProfile> removePermission(@PathVariable String id){
+        return ResponseEntity.ok(deactivateUserUseCase.removePremium(id));
+    }
     @DeleteMapping("/profile/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteUser(@PathVariable String id){
-        deactivateUserUseCase.deactivateProfile(id);
+        deactivateUserUseCase.removeProfile(id);
         return ResponseEntity.ok("User deactivated");
     }
     @PostMapping("/promote")
