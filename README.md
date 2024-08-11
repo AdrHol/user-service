@@ -1,6 +1,13 @@
 # user-service
 
 
-Part of a cloud native SaaS application.
+User-service for MVP E-commerce platform. 
 
-Service responsible for business logic related to user entity.
+User-service:
+- #TODO Tests
+    - Web layer 
+    - Service layer
+    - persistence layer 
+    - JSON tests
+- #TODO expanding business logic 
+- #TODO Connecting to discovery service
