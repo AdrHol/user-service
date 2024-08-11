@@ -2,10 +2,10 @@ package com.adrhol.user_service.adapters.in.web;
 
 import com.adrhol.user_service.application.domain.entity.UserProfile;
 import com.adrhol.user_service.application.ports.in.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class UserProfileServiceController {
     }
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserProfile> createUser(@Validated @RequestBody CreateUserCommand createUserCommand){
+    public ResponseEntity<UserProfile> createUser(@Valid @RequestBody CreateUserCommand createUserCommand){
         UserProfile createdUser = registerUserProfileUseCase.registerUser(createUserCommand);
         return ResponseEntity.ok(createdUser);
     }
@@ -40,7 +40,7 @@ public class UserProfileServiceController {
         return ResponseEntity.ok(findUserProfileUseCase.findUsersByCriteria(searchUserProfileQuery));
     }
     @PutMapping("/profile/{id}")
-    public ResponseEntity<UserProfile> updateUser(@Validated UpdateUserCommand updateUserCommand){
+    public ResponseEntity<UserProfile> updateUser(UpdateUserCommand updateUserCommand){
         return ResponseEntity.ok(profileDetailsEditionUseCase.updateProfile(updateUserCommand));
     }
     @DeleteMapping("/profile/{id}")
